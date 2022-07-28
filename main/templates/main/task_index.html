@@ -1,0 +1,16 @@
+<form method="POST" action="/">
+    {% csrf_token %}
+
+    <textarea name="title"></textarea>
+    <input type="submit" value="Add Task"/>
+</form>
+
+<div>
+    {% for task in tasks %}
+    <div>
+        <a href="{% url 'task' task.id %}">{{task.title}}</a>
+        <small></small>
+        <hr>
+    </div>
+    {% endfor %}
+</div>
