@@ -1,16 +1,390 @@
-<form method="POST" action="/">
-    {% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Morning Routine List</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Jost:wght@300&display=swap" rel="stylesheet">
 
-    <textarea name="title"></textarea>
-    <input type="submit" value="Add Task"/>
-</form>
+    <style>
+            .navbar {
+                width: 88%;
+                margin: auto;
+                padding: 15px 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            body {
+                display:flex;
+                justify-content:center;
+                align-items: center;
+                margin: 0;
+                width: 100%;
+                height: 100vh;
+                padding: 15px;
+                background-color:#70878A;
+                font-family: 'Jost', sans-serif;
+            }
 
-<div>
-    {% for task in tasks %}
-    <div>
-        <a href="{% url 'task' task.id %}">{{task.title}}</a>
-        <small></small>
-        <hr>
+            .navigation {
+                width: 400px;
+                height: 70px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 10px;
+            }
+
+            .navigation ul {
+                display: flex;
+                width: 350px;
+
+            }
+
+            .navigation ul li {
+                position: relative;
+                list-style: none;
+                width: 70px;
+                height: 70px;
+                z-index: 1;
+            }
+
+            .navigation ul li a{
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                width: 100%;
+                text-align: center;
+                font-weight: 500;
+                color: #ffffff;
+
+            }
+
+            .navigation ul li a .icon{
+                position: relative;
+                display: block;
+                line-height: 75px;
+                font-size: 1.5em;
+                text-align: center;
+                transition: 0.5s;
+                color:#ffffff;
+            }
+
+            .navigation ul li:hover a .icon{
+                transform: translateY(-35px);
+            }
+
+            input {
+                outline: none;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+            }
+
+            .app-container {
+                max-width: 480px;
+                width: 100%;
+                max-height: 100%;
+                background-color: rgba(255,255,255,0.3);
+                overflow: auto;
+                color: black;
+            }
+
+            .app-header {
+                font-size: 30px;
+                line-height: 32px;
+                color: black;
+                font-family: 'Jost', cursive, !important;
+                align-items: center;
+
+            }
+
+            .submit-task{
+                width: 32px;
+                height: 32px;
+                flex-shrink: 0;
+                border: none;
+                background: var(--add-button);
+                color: #272727;
+                background-image: url("https://cdn.onlinewebfonts.com/svg/img_260851.png");
+                background-size: 18px;
+                background-position: center;
+                background-repeat:no-repeat;
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 0 0 12px 0 var(--add-button-shadow);
+            }
+
+            .add-task {
+                height: 40px;
+                font-size: 14px;
+                display: flex;
+            }
+
+            .task-input {
+                width: 100%;
+                padding: 0 5px;
+                outline: none;
+                border: none;
+                border-bottom: 1px solid #272727;
+                background-color: transparent;
+                margin-right: 25px;
+                color: #272727;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .task-input::placeholder {
+                color:#272727;
+            }
+
+            .task-list-item {
+                background-color: #ffffff;
+                display: flex;
+                align-items: center;
+                padding: 8px;
+                border-radius: 35px;
+                margin-bottom: 12px;
+            }
+
+            .task-list-item input {
+                width: 16px;
+                height: 16px;
+                border: 1px solid #272727;
+                border-radius: 50%;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 0;
+                transition: 0.2s;
+                margin-right: 8px;
+                flex-shrink: 0;
+                margin-top: 4px;
+                appearance: none;
+            }
+
+            .task-list-item input:hover {
+                border-color: var(--checkbox-color);
+                box-shadow: 0 0 0 3px var(--checkbox-color-shadow);
+            }
+
+            .task-list-item input:checked {
+                background-size: 10px;
+                border: 1px solid var(--checkbox-color);
+                background-color: var(--checkbox-color);
+            }
+
+            .task-list-item input:checked + span {
+                color: #70878A;
+                text-decoration: line-through #272727;
+            }
+
+            .task-list-item-label {
+                display: flex;
+                align-items: flex-start;
+                color: #272727;
+                margin-right: 8px;
+                font-size: 14px;
+                line-height: 24px;
+                position: relative;
+                transition: 0.2s;
+                cursor: pointer;
+            }
+
+            .delete-btn {
+                margin-left: auto;
+                margin-right: 5px;
+                display: block;
+                width: 16px;
+                height: 16px;
+                background-image: url("https://images.vexels.com/media/users/3/155299/isolated/preview/1988d1faba4d059eb4461d955af5cf61-x-mark-scribble-by-vexels.png");
+                background-repeat: no-repeat;
+                background-size: 16px;
+                background-position: center;
+                cursor: pointer;
+            }
+
+            
+
+
+
+
+        </style>
+    </head>
+
+    {% load static %}
+      
+    
+
+    <body>
+        {% csrf_token %}
+     
+        {% if user.is_authenticated %}
+        <div class="containter">
+            <div class="navbar">
+            
+
+            </div>
+        </div>
+
+    
+              
+       <div class="app-container" id="app">
+
+        <div class="navigation">
+            <ul>
+                <li class="list"></li>
+                <a href="{% url 'tasks' %}">
+                    <span class="icon"></span>
+                    <ion-icon name="home-outline"></ion-icon>
+                    <span class="text">Home</span>
+                </a>
+                </li>
+                <li class="list"></li>
+                <a href="{% url 'entries' %}">
+                    <span class="icon"></span>
+                    <ion-icon name="journal-outline"></ion-icon>
+                    <span class="text">Journal</span>
+                </a>
+                </li>
+                <li class="list"></li>
+                <a href="{% url 'timer' %}">
+                    <span class="icon"></span>
+                    <ion-icon name="timer-outline"></ion-icon>
+                    <span class="text">Timer</span>
+                </a>
+                </li>
+                <li class="list"></li>
+                <a href="{% url 'login' %}">
+                    <span class="icon"></span>
+                    <ion-icon name="person-outline"></ion-icon>
+                    <span class="text">Logout</span>
+                </a>
+                </li>
+             
+            </ul>
+        </div>
+            <h1 class="app-header">Morning Routine</h1>
+            
+        <div class="add-task">
+            <input type="text" placeholder="Add New Task" v-model="newTask.title" class="task-input">
+            <template v-if="postErrors.title">
+                <p v-for="error in postErrors.title"> [[ error ]]</p>
+            </template>
+            <button @click="createTask" class="submit-task"></button>
+        </div>
+
+
+        <ul class="task-list">
+            <li class="task-list-item" v-for="task in tasks" :key="task.id">
+            <label class="task-list-item-label">
+                <input type="checkbox">
+                <span> [[task.title ]] </span>
+            </label>
+            <span class="delete-btn" title="delete-task" @click="deleteTask(task)" ></span>
+            </li>
+
+        </ul>
+        <div class="sounds">
+            <audio controls>
+                <source src="static/lost.mp3" type="audio/mpeg"/>
+            </audio>
+        </div>
+        </div>
+      
+        <br>
     </div>
-    {% endfor %}
+    
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+        <script src="https://unpkg.com/vue@2"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script>
+
+            const vm = new Vue({
+                el: '#app',
+                delimiters: ['[[', ']]'],
+                data: {
+                    csrfToken: "",
+                    tasks: [],
+                    currentUser: {},
+                    newTask: {
+                        title: '',
+                    },
+                    postErrors: {},
+                },
+                methods: {
+                    loadTasks: function() {
+                        axios({
+                            method: 'get',
+                            url: '/api/v1tasks/'
+                        }).then(response => this.tasks = response.data)
+                    },
+                    loadCurrentUser: function(){
+                        axios({
+                            method: 'get',
+                            url: '/api/v1currentuser/'
+                        }).then(response => this.currentUser = response.data)
+                    },
+                    createTask: function(){
+                        axios({
+                            method: 'post',
+                            url: '/api/v1tasks/',
+                            headers: {
+                                'X-CSRFToken': this.csrfToken
+                            },
+                            data: {
+                                "title": this.newTask.title,
+                                "user": this.currentUser.id,
+                            }
+                            
+                        }).then(response => {
+                            this.loadTasks()
+                            this.newTask = {
+                                "title": "",
+                            }
+                        }).catch(error => this.postErrors = error.response.data)
+                    },
+                    deleteTask: function(task){
+                        console.log(task.id)
+                        axios({
+                            method:'delete',
+                            url:`api/v1tasks/${task.id}/`,
+                            headers: {
+                                'X-CSRFToken': this.csrfToken
+                            },
+                          
+                        }).then(response => {
+                            console.log("this works!")
+                            this.loadTasks()
+                            this.newTask = {
+                                "title":"",
+                            }
+                        })
+                    }
+                },
+                created: function() {
+                    this.loadTasks()
+                    this.loadCurrentUser()
+                },
+                mounted: function() {
+                    this.csrfToken = document.querySelector("input[name=csrfmiddlewaretoken]").value
+                }
+            })
+
+        </script>
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
 </div>
+{% endif %}
+    </body>
+
+</html>

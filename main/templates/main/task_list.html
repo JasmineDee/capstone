@@ -1,12 +1,2 @@
-<a href="{% url 'tasks' %}">Go Back</a>
-<small></small>
-<hr>
 
-<form method="POST" action="{% url 'task' task.id %}">
-    {% csrf_token %}
-    <textarea name="title"> {{task.title}} </textarea>
-    <input type="submit" value="Save"/>
 
-</form>
-<hr>
-<a href="{% url 'delete' task.id %}"

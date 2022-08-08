@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Journal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css" />
+</head>
+
+<style>
+
+body {
+    background-color: #70878A;
+}
+
+.hero{
+    color: #2f2f41;
+    background-color: rgba(1, 164, 121, 0.1);
+}
+
+</style>
+
+<body>
+    <section class="hero">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Manifestation Journal
+                </h1>
+            </div>
+        </div>
+    </section>
+    <a href="{% url 'entries' %}">Back</a>
+    <section class="section">
+        <div class="container">
+
+        <form method="POST" action="{% url 'add' %}">
+                {% csrf_token %}
+                <div class="field">
+                    <div class="control">
+                        {{ form.text }}
+                    </div>
+                </div>
+
+                <div class="field is-grouped is-grouped-right">
+                    <div class="control">
+                        <button class="button is-link">Submit</button>
+                    </div>
+                </div>
+        </form>
+        </div>
+
+    </section>
+    <footer class="footer">
+    </footer>
+</body>
+
+</html>
